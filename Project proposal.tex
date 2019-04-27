@@ -1,5 +1,5 @@
-\documentclass[a4paper,11pt]{article}
-\usepackage[margin=1.25in, top=1.25in,bottom=1.25in]{geometry}
+\documentclass[a4paper,11=0pt]{article}
+\usepackage[margin=1.15in, top=1.15in,bottom=1.15in]{geometry}
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage{graphicx}
@@ -40,7 +40,11 @@ The major problem in the field is that of catastrophic forgetting. New learning 
 
 The most recent advances in continual learning have favoured a prior-focused approach, such as variational continual learning \cite{vcl}, synaptic intelligence \cite{si}, elastic weight consolidation \cite{ewc}, Riemannian walk \cite{rw}, Kronecker factored online Laplace approximation \cite{ritter}. These prior-focused approaches use the posterior or other parameters from previous tasks as priors for new tasks. Likelihood-based approaches, such as Deep Generative Replay \cite{dgr}, are based on pseudo-rehearsal \cite{robins}, simulating previous datasets in order to estimate their log-likelihood according to the new model. There have also been approaches based on dynamic architectures. %Rusu 2016, Li and Hoiem 2017
 
-We suggest that further investigation into the variational continual learning (VCL) approach \cite{vcl} is warranted. Currently, good performance is dependent on re-training on small coresets retained from previous datasets \cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning.
+\vspace{-0.5em}
+\subsubsection*{Variational Continual Learning}
+
+\vspace{-1em}
+We suggest that further investigation into the variational continual learning (VCL)  \cite{vcl} approach is warranted. Currently, good performance is dependent on re-training on small coresets retained from previous datasets \cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning.
 
 VCL demonstrates a prior-focused Bayesian approach to continual learning, where the posterior for the previous tasks is used as the prior when training on the new task dataset. This is an intuitive way of allowing the previous tasks to strongly influence prediction, whilst allowing the parameters to adapt to the new task. 
 \begin{equation}\label{eq:1}
@@ -52,7 +56,7 @@ VCL demonstrates a prior-focused Bayesian approach to continual learning, where 
 
 However, the true posterior $p(\theta | \mathcal{D}_{1:t})$ is computationally intractable, so we must approximate it. We suggest that improvements to this approximation may be key to performance. 
 
-\newpage
+
 The posterior approximation in VCL is performed using Kullback-Leibler (KL) minimisation, a variational method, over a model family of possible posteriors $\mathcal{Q}$, to yield a tractable normalised approximation $q_t(\theta)$ to the true posterior $p(\theta | \mathcal{D}_{1:t})$. We define $q_0(\theta)$ to be the prior, $p(\theta)$.
 
 \vspace{-1.7em}
@@ -64,8 +68,8 @@ The posterior approximation in VCL is performed using Kullback-Leibler (KL) mini
 Here, $\theta$ are the parameters, $\mathcal{D}_i$ is the $i$\textsuperscript{th} dataset, $q_i(\theta)$ is the posterior approximation following the $i$\textsuperscript{th} dataset, $Z_t$ is the intractable normalisation constant which is irrelevant for minimisation.
 
 
-
-Crucially, this is exact Bayesian inference, that is, \ $q_t(\theta)=p(\theta | \mathcal{D}_{1:t}) \: \forall t$, if two criteria are met at every step:
+\newpage
+Crucially, this is exact Bayesian inference, \ $q_t(\theta)=p(\theta | \mathcal{D}_{1:t}) \: \forall t$, if two criteria are met at every step:
 
 \begin{enumerate}
 \item The true posterior is a member of the model family $\mathcal{Q}$.
@@ -74,8 +78,12 @@ Crucially, this is exact Bayesian inference, that is, \ $q_t(\theta)=p(\theta | 
 % We make a big assumption that we are actually getting a minimum KL divergence
 \end{enumerate}
 
-Since the posterior approximation occurs after every task is learned, improving this approximation is important to prevent error propagation across different tasks. We therefore suggest that investigation into improvements to these two criteria should be the major aims of the project.
+Since the posterior approximation occurs after every task is learned, improving this approximation is important to prevent error propagation across different tasks. We therefore suggest that investigation into improvements to these two criteria should be the primary and secondary aims of the project.
 
+\vspace{-1em}
+\subsubsection*{Aims of the project}
+
+\vspace{-1em}
 
 We suggest that an investigation into an improvement to the first criterion is the most promising, as we suspect that it is likely that the model family used in VCL is not sufficient to approximate the posterior well. The primary aim of the project is therefore to see if using a more adaptable model family results in better performance:
 % So we're pretty confident it doesn't lie in this model family
@@ -94,10 +102,7 @@ We expect that a full covariance Gaussian distribution will be able to approxima
 \end{center}
 {Figure 1: Comparison of posterior distribution approximations on a synthetic example with two parameters. A diagonal covariance Gaussian distribution (KLD) results in KL\textsubscript{res} = 4.6, whereas a full covariance Gaussian distribution (KL) results in an improved KL\textsubscript{res} = 3.9. \cite{ensemblelearning}}.
 
-
 \end{enumerate}
-
-\newpage
 
 We suggest that an investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either variational or Markov Chain Monte Carlo (MCMC) inference. We also suggest looking into using a MCMC approach instead of variational approach such as KL minimisation. The secondary aim of the project is therefore to see if using MCMC results in better performance:
 \begin{enumerate}
@@ -116,7 +121,8 @@ We expect that Hamiltonian Monte Carlo (HMC) is a promising MCMC method to use f
 \hline
 March 	& Write project proposal; review literature\\
 April	& Use non-continual BNN to compare diagonal and full model families\\
-May		& Continue with comparison; begin continual learning implementation \\
+May		& Continue with comparison; \\
+&begin continual learning comparison implementation \\
 June 	& Continue with continual learning comparison implementation\\
 July	& Continue with continual learning comparison implementation; \\
 &begin with Markov Chain Monte Carlo implementation\\
