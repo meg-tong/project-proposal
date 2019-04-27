@@ -1,6 +1,6 @@
 # project-proposal
 
-Submit a summary of your selected project to the Director of the course before the first Monday of Trinity Term (29 April 2019). This must be accompanied by an essay of one to two thousand words describing the project, including:
+Submit a summary of your selected project to the Director of the course before Wednesday 1 May (Trinity Term, week 1). This must be accompanied by an essay of one to two thousand words describing the project, including:
 
 1. Background: the theory or application areas; 
 2. General open questions;
