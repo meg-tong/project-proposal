@@ -46,7 +46,7 @@ The most recent advances in continual learning have favoured a prior-focused app
 \subsubsection*{Variational Continual Learning}
 
 \vspace{-1em}
-We suggest that further investigation into the variational continual learning (VCL)  \cite{vcl} approach is warranted. Currently, good performance is dependent on re-training on small coresets retained from previous datasets \cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning.
+We suggest that further investigation into the variational continual learning (VCL) approach \cite{vcl} is warranted. Currently, good performance is dependent on re-training on small coresets retained from previous datasets \cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning.
 
 VCL demonstrates a prior-focused Bayesian approach to continual learning, where the posterior for the previous tasks is used as the prior when training on the new task dataset. This is an intuitive way of allowing the previous tasks to strongly influence prediction, whilst allowing the parameters to adapt to the new task. 
 \begin{equation}\label{eq:1}
@@ -55,7 +55,7 @@ VCL demonstrates a prior-focused Bayesian approach to continual learning, where 
 \end{split}
 \end{equation}
 
-
+\vspace{-0.75em}
 However, the true posterior $p(\theta | \mathcal{D}_{1:t})$ is computationally intractable, so we must approximate it. We suggest that improvements to this approximation may be key to performance. 
 
 
@@ -96,7 +96,7 @@ We suggest that an investigation into an improvement to the first criterion is t
 VCL uses a Gaussian mean-field approximate posterior, with diagonal covariance: %sigma^2_{t,d}
 \[q_t(\theta) = \prod^D_{d=1} \mathcal{N}(\boldtheta_{t,d}; \mu_{t,d}, \sigma^2_{t,d})\]
 % correlation elements, non-diagonal elements
-We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately by including off-diagonal correlation elements in the covariance matrix, which can be significant. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family. %MacKay 1992 thinks off-diagonal elements are significant.
+We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately by including off-diagonal correlation elements in the covariance matrix, which can be significant. Simple diagonal covariance Gaussian distributions approximate the posterior too conservatively, placing no probability mass where the posterior is small \cite{mackay1995}. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family. %MacKay 1992 thinks off-diagonal elements are significant.
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{approximations}
@@ -167,7 +167,9 @@ Neural Networks Simple by Minimizing Description Length of the Weights}. \href{h
 
 \bibitem[Kirkpatrick et al., 2017]{ewc} J. Kirkpatrick, R. Pascanua, N. Rabinowitza, J. Venessa, G. Desjardinsa, A. A. Rusua, K. Milana, J. Quana, T. Ramalhoa, A. Grabska-Barwinskaa, D. Hassabisa, C. Clopathb, D. Kumarana, and R. Hadsella, 2017. \textit{Overcoming catastrophic forgetting in neural networks}. \href{https://arxiv.org/abs/1612.00796}{arXiv:1612.00796v2}
 
-%\bibitem[MacKay, 1992]{mackay} D. J. C. MacKay, 1992. \textit{A Practical Bayesian Framework for Backpropagation Newtorks}. \href{https://authors.library.caltech.edu/13793/1/MACnc92b.pdf}{Link to paper}
+%\bibitem[MacKay, 1992]{mackay1992} D. J. C. MacKay, 1992. \textit{A Practical Bayesian Framework for Backpropagation Newtorks}. \href{https://authors.library.caltech.edu/13793/1/MACnc92b.pdf}{Link to paper}
+
+\bibitem[MacKay, 1995]{mackay1995} D. J. C. MacKay, 1995. \textit{Probable networks and plausible predictions - a review of practical Bayesian methods for supervised neural networks}. \href{https://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=F4F7C99DECF23AEDF5BAAF5E25DE86F9?doi=10.1.1.136.4011&rep=rep1&type=pdf}{Link to paper}
 
 \bibitem[McCloskey \& Cohen, 1989]{catastrophic} M. McCloskey, N. J. Cohen, 1989. \textit{Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem}. Psychology of Learning and Motivation, Volume 24, 109-165.
 
@@ -177,13 +179,11 @@ Neural Networks Simple by Minimizing Description Length of the Weights}. \href{h
 
 \bibitem[Nguyen et al., 2017]{vcl} C. V. Nguyen, Y. Li, T. D. Bui, R. E. Turner, 2017. \textit{Variational Continual Learning}. \href{https://arxiv.org/abs/1710.10628}{arXiv:1710.10628v3}
 
-%\bibitem[Ratcliff, 1990]{connectionist} R. Ratcliff, 1990. \textit{Connectionist Models of Recognition Memory: Constraints Imposed by Learning and Forgetting Functions}. Psychological Review, Vol.97, No. 2, 285-308.
+%\bibitem[Ratcliff, 1990]{connectionist} R. Ratcliff, 1990. \texdtit{Connectionist Models of Recognition Memory: Constraints Imposed by Learning and Forgetting Functions}. Psychological Review, Vol.97, No. 2, 285-308.
 
 \bibitem[Ritter et al., 2018]{ritter} H. Ritter, A. Botev, D. Barber, 2018. \textit{Online Structured Laplace Approximations For Overcoming Catastrophic Forgetting}. \href{https://arxiv.org/abs/1805.07810}{arXiv:1805.07810v1}
 
 \bibitem[Robins, 1995]{robins} A. Robins. \textit{Catastrophic forgetting, rehearsal, and pseudorehearsal}. Connection Science: Journal of Neural Computing, Artificial Intelligence and Cognitive Research, Volume 7, 123-146.
-
-
 
 \bibitem[Shin et al., 2017]{dgr} H. Shin, J. K. Lee, J. Kim, J. Kim, 2017. \textit{Continual Learning with Deep Generative Replay}. \href{https://arxiv.org/abs/1705.08690}{arXiv:1705.08690v3}
 
