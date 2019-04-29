@@ -10,6 +10,7 @@
 \usepackage{caption}
 \usepackage{parskip}
 \usepackage{tikz}
+\usepackage{csquotes}
 \usepackage{hyperref}
 \renewcommand\rmdefault{ptm} % use Times
 \let\boldtheta\theta % make theta into vector
@@ -95,17 +96,21 @@ We suggest that an investigation into an improvement to the first criterion is t
 VCL uses a Gaussian mean-field approximate posterior, with diagonal covariance: %sigma^2_{t,d}
 \[q_t(\theta) = \prod^D_{d=1} \mathcal{N}(\boldtheta_{t,d}; \mu_{t,d}, \sigma^2_{t,d})\]
 % correlation elements, non-diagonal elements
-We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately by including off-diagonal correlation elements in the covariance matrix, which can be significant. `More flexible distributions \ldots\ simply give better approximations to the true posterior' \cite{ensemblelearning}. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family.
+We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately by including off-diagonal correlation elements in the covariance matrix, which can be significant. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family. %MacKay 1992 thinks off-diagonal elements are significant.
+
 \begin{center}
 \includegraphics[width=0.7\textwidth]{approximations}
  \label{figure:family}
 \end{center}
-{Figure 1: Comparison of posterior distribution approximations on a synthetic example with two parameters. A full covariance Gaussian distribution (KL) results in a much improved approximation to the posterior than the diagonal covariance Gaussian distribution (KLD), with a lower residual KL value. \cite{ensemblelearning}}.
+{Figure 1: Comparison of posterior distribution approximations on a synthetic example with two parameters. A full covariance Gaussian distribution (KL) results in a much improved approximation to the posterior than the diagonal covariance Gaussian distribution (KLD), with a lower residual KL value and better KL fit. `More flexible distributions \textelp{} simply give better approximations to the true posterior'.
+\cite{ensemblelearning}}
 %A diagonal covariance Gaussian distribution (KLD) results in KL\textsubscript{res} = 4.6, whereas a full covariance Gaussian distribution (KL) results in an improved KL\textsubscript{res} = 3.9. \cite{ensemblelearning}}.
+
+A tractable algorithm for posterior approximation with a full covariance Gaussian distribution has been demonstrated \cite{ensemblelearning}. %Elaborate?
 
 \end{enumerate}
 \newpage
-We suggest that an investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either variational or Markov Chain Monte Carlo (MCMC) inference. We also suggest looking into using a MCMC approach instead of variational approach such as KL minimisation. The secondary aim of the project is therefore to see if using MCMC results in better performance:
+We suggest that an investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either variational or Markov Chain Monte Carlo (MCMC) inference. We also suggest looking into using a MCMC approach instead of a variational approach such as KL minimisation. The secondary aim of the project is therefore to see if using MCMC results in better performance:
 \begin{enumerate}
 \setcounter{enumi}{1}
 \item \textbf{Using a Markov Chain Monte Carlo method for posterior approximation.}
@@ -134,14 +139,14 @@ September 2 & Hand-in date\\
 \hline
 \end{tabular}
 
-\subsection*{Project supervisors' signatures}
+%\subsection*{Project supervisors' signatures}
 
-\begin{labeling}{projectsupervisors}
-\vspace*{2.25em}
-\item[S. Farquhar] \rule{5cm}{1pt}
-\vspace*{2.5em}
-\item[Y. Gal] \rule{5cm}{1pt}
-\end{labeling}
+%\begin{labeling}{projectsupervisors}
+%\vspace*{2.25em}
+%\item[S. Farquhar] \rule{5cm}{1pt}
+%\vspace*{2.5em}
+%\item[Y. Gal] \rule{5cm}{1pt}
+%\end{labeling}
 
 
  
