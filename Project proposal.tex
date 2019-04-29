@@ -38,7 +38,7 @@ For real-world problems, it is vital that intelligent agents have the capacity t
 
 The major problem in the field is that of catastrophic forgetting. New learning often causes neural networks to rapidly forget old learning \cite{catastrophic}. The challenge is to balance learning new tasks whilst remembering previous ones. Though promising results have been published in the field of continual learning, clear shortcomings have been identified in many of the current approaches and evaluations, such as a dependency on re-training on previous datasets or tasks \cite{robust}. 
 
-The most recent advances in continual learning have favoured a prior-focused approach, such as variational continual learning \cite{vcl}, synaptic intelligence \cite{si}, elastic weight consolidation \cite{ewc}, Riemannian walk \cite{rw}, Kronecker factored online Laplace approximation \cite{ritter}. These prior-focused approaches use the posterior or other parameters from previous tasks as priors for new tasks. Likelihood-based approaches, such as Deep Generative Replay \cite{dgr}, are based on pseudo-rehearsal \cite{robins}, simulating previous datasets in order to estimate their log-likelihood according to the new model. There have also been approaches based on dynamic architectures. %Rusu 2016, Li and Hoiem 2017
+The most recent advances in continual learning have favoured a prior-focused approach, such as variational continual learning \cite{vcl}, synaptic intelligence \cite{si}, elastic weight consolidation \cite{ewc}, Riemannian walk \cite{rw} and Kronecker factored online Laplace approximation \cite{ritter}. These prior-focused approaches use the posterior or other parameters from previous tasks as priors for new tasks. Likelihood-based approaches, such as Deep Generative Replay \cite{dgr}, are based on pseudo-rehearsal \cite{robins}, simulating previous datasets in order to estimate their log-likelihood according to the new model. There have also been approaches based on dynamic architectures. %Rusu 2016, Li and Hoiem 2017
 
 \vspace{-0.5em}
 \subsubsection*{Variational Continual Learning}
@@ -95,19 +95,22 @@ We suggest that an investigation into an improvement to the first criterion is t
 VCL uses a Gaussian mean-field approximate posterior, with diagonal covariance: %sigma^2_{t,d}
 \[q_t(\theta) = \prod^D_{d=1} \mathcal{N}(\boldtheta_{t,d}; \mu_{t,d}, \sigma^2_{t,d})\]
 % correlation elements, non-diagonal elements
-We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately, as the covariance matrix has off-diagonal correlation elements. `More flexible distributions \ldots\ simply give better approximations to the true posterior' \cite{ensemblelearning}. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family.
+We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately by including off-diagonal correlation elements in the covariance matrix, which can be significant. `More flexible distributions \ldots\ simply give better approximations to the true posterior' \cite{ensemblelearning}. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family.
 \begin{center}
-\includegraphics[width=0.575\textwidth]{approximations}
+\includegraphics[width=0.7\textwidth]{approximations}
  \label{figure:family}
 \end{center}
-{Figure 1: Comparison of posterior distribution approximations on a synthetic example with two parameters. A diagonal covariance Gaussian distribution (KLD) results in KL\textsubscript{res} = 4.6, whereas a full covariance Gaussian distribution (KL) results in an improved KL\textsubscript{res} = 3.9. \cite{ensemblelearning}}.
+{Figure 1: Comparison of posterior distribution approximations on a synthetic example with two parameters. A full covariance Gaussian distribution (KL) results in a much improved approximation to the posterior than the diagonal covariance Gaussian distribution (KLD), with a lower residual KL value. \cite{ensemblelearning}}.
+%A diagonal covariance Gaussian distribution (KLD) results in KL\textsubscript{res} = 4.6, whereas a full covariance Gaussian distribution (KL) results in an improved KL\textsubscript{res} = 3.9. \cite{ensemblelearning}}.
 
 \end{enumerate}
-
+\newpage
 We suggest that an investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either variational or Markov Chain Monte Carlo (MCMC) inference. We also suggest looking into using a MCMC approach instead of variational approach such as KL minimisation. The secondary aim of the project is therefore to see if using MCMC results in better performance:
 \begin{enumerate}
 \setcounter{enumi}{1}
 \item \textbf{Using a Markov Chain Monte Carlo method for posterior approximation.}
+
+Using a Monte Carlo method to sample from the posterior distribution is the closest we can get to exact Bayesian inference in practice, and is advantageous in that it does not impose assumptions about the shape of the posterior distribution \cite{hinton}.
 
 We expect that Hamiltonian Monte Carlo (HMC) is a promising MCMC method to use for approximate inference. HMC is a principled Hamiltonian dynamics-based MCMC method which has been applied successfully to Bayesian neural networks \cite{bayesianlearning}. It systematically and coherently traverses the state space, avoiding the slow exploration typical of random walk proposals \cite{hmc}. This is particularly useful in high-dimensional spaces, where we must use information about the space geometry for an efficient exploration. Gradient-based algorithms such as HMC tend to be more robust and geometrically ergodic over a larger class of target distributions than non-gradient based algorithms, yielding `stronger guarantees on the validity of the resulting estimators' \cite{conceptual}.
 % second-gradient - calculating Hamiltonian is really expensive for high dimensional spaces
@@ -146,7 +149,7 @@ September 2 & Hand-in date\\
 \newpage
 \begin{thebibliography}{8}
 
-\bibitem[Barber \& Bishop, 1998]{ensemblelearning} D. Barber, C. M. Bishop, 1998. \textit{Ensemble Learning in Bayesian Neural Networks}. Neural Networks and Machine Learning, Springer, 215-237. \url{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-ensemble-nato-98.pdf}
+\bibitem[Barber \& Bishop, 1998]{ensemblelearning} D. Barber, C. M. Bishop, 1998. \textit{Ensemble Learning in Bayesian Neural Networks}. Neural Networks and Machine Learning, Springer, 215-237. \href{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-ensemble-nato-98.pdf}{Link to paper}
 
 \bibitem[Betancourt, 2017]{conceptual} M. Betancourt, 2017. \textit{A Conceptual Introduction to Hamiltonian Monte Carlo}. \href{https://arxiv.org/abs/1701.02434}{arXiv:1701.02434v2}
 
@@ -156,13 +159,18 @@ September 2 & Hand-in date\\
 
 \bibitem[Farquhar \& Gal, 2018]{robust} S. Farquhar, Y. Gal, 2018. \textit{Towards Robust Evaluations of Continual Learning}. \href{https://arxiv.org/abs/1805.09733}{arXiv:1805.09733v2}
 
+\bibitem[Hinton \& van Camp, 1993]{hinton} G. E. Hinton, D. van Camp, 1993. \textit{Keeping the
+Neural Networks Simple by Minimizing Description Length of the Weights}. \href{http://www.cs.toronto.edu/~fritz/absps/colt93.pdf}{Link to paper}
+
 \bibitem[Kirkpatrick et al., 2017]{ewc} J. Kirkpatrick, R. Pascanua, N. Rabinowitza, J. Venessa, G. Desjardinsa, A. A. Rusua, K. Milana, J. Quana, T. Ramalhoa, A. Grabska-Barwinskaa, D. Hassabisa, C. Clopathb, D. Kumarana, and R. Hadsella, 2017. \textit{Overcoming catastrophic forgetting in neural networks}. \href{https://arxiv.org/abs/1612.00796}{arXiv:1612.00796v2}
+
+%\bibitem[MacKay, 1992]{mackay} D. J. C. MacKay, 1992. \textit{A Practical Bayesian Framework for Backpropagation Newtorks}. \href{https://authors.library.caltech.edu/13793/1/MACnc92b.pdf}{Link to paper}
 
 \bibitem[McCloskey \& Cohen, 1989]{catastrophic} M. McCloskey, N. J. Cohen, 1989. \textit{Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem}. Psychology of Learning and Motivation, Volume 24, 109-165.
 
 \bibitem[Neal, 2012]{hmc} R. M. Neal, 2012. \textit{MCMC using Hamiltonian dynamics}. \href{https://arxiv.org/abs/1206.1901}{arXiv:1206.1901v1}
 
-\bibitem[Neal, 1995]{bayesianlearning} R. M. Neal, 1995. \textit{Bayesian Learning for Neural Networks}. \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.446.9306&rep=rep1&type=pdf}
+\bibitem[Neal, 1995]{bayesianlearning} R. M. Neal, 1995. \textit{Bayesian Learning for Neural Networks}. \href{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.446.9306&rep=rep1&type=pdf}{Link to paper}
 
 \bibitem[Nguyen et al., 2017]{vcl} C. V. Nguyen, Y. Li, T. D. Bui, R. E. Turner, 2017. \textit{Variational Continual Learning}. \href{https://arxiv.org/abs/1710.10628}{arXiv:1710.10628v3}
 
