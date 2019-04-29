@@ -1,5 +1,5 @@
 \documentclass[a4paper,11=0pt]{article}
-\usepackage[margin=1.15in, top=1.15in,bottom=1.15in]{geometry}
+\usepackage[margin=1in, top=1in,bottom=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage{graphicx}
@@ -18,7 +18,7 @@
 \renewcommand{\d}{\: \mathrm{d}} % fix d in integrals
 \usepackage{scrextend} % for lists
 
-\title{\vspace*{-1.5em}\textbf{Project Proposal}\\ \vspace{0.25em} \Large Investigating Bayesian Inference in Continual Learning}
+\title{\vspace*{-2em}\textbf{Project Proposal}\\ \vspace{0.25em} \Large Investigating Bayesian Inference in Continual Learning}
 
 \author{M. E. Tong, supervised by S. Farquhar and Y. Gal}
 
@@ -35,13 +35,14 @@
 %Draft Timetable;
 %Signature of Project Supervisor.
 
+\vspace{-1em}
 For real-world problems, it is vital that intelligent agents have the capacity to learn and remember a variety of tasks \cite{ewc}. Continual learning refers to online multi-task learning where tasks are learned sequentially, with datasets discarded after training. It is of particular importance for applications for which retaining old datasets is unethical, undesireable, illegal or imprudent \cite{unifying, robust}.
 
 The major problem in the field is that of catastrophic forgetting. New learning often causes neural networks to rapidly forget old learning \cite{catastrophic}. The challenge is to balance learning new tasks whilst remembering previous ones. Though promising results have been published in the field of continual learning, clear shortcomings have been identified in many of the current approaches and evaluations, such as a dependency on re-training on previous datasets or tasks \cite{robust}. 
 
 The most recent advances in continual learning have favoured a prior-focused approach, such as variational continual learning \cite{vcl}, synaptic intelligence \cite{si}, elastic weight consolidation \cite{ewc}, Riemannian walk \cite{rw} and Kronecker factored online Laplace approximation \cite{ritter}. These prior-focused approaches use the posterior or other parameters from previous tasks as priors for new tasks. Likelihood-based approaches, such as Deep Generative Replay \cite{dgr}, are based on pseudo-rehearsal \cite{robins}, simulating previous datasets in order to estimate their log-likelihood according to the new model. There have also been approaches based on dynamic architectures. %Rusu 2016, Li and Hoiem 2017
 
-\vspace{-0.5em}
+\vspace{-1em}
 \subsubsection*{Variational Continual Learning}
 
 \vspace{-1em}
@@ -69,7 +70,6 @@ The posterior approximation in VCL is performed using Kullback-Leibler (KL) mini
 Here, $\theta$ are the parameters, $\mathcal{D}_i$ is the $i$\textsuperscript{th} dataset, $q_i(\theta)$ is the posterior approximation following the $i$\textsuperscript{th} dataset, $Z_t$ is the intractable normalisation constant which is irrelevant for minimisation.
 
 
-\newpage
 Crucially, this is exact Bayesian inference, \ $q_t(\theta)=p(\theta | \mathcal{D}_{1:t}) \: \forall t$, if two criteria are met at every step:
 
 \begin{enumerate}
@@ -109,7 +109,7 @@ We expect that a full covariance Gaussian distribution will be able to approxima
 A tractable algorithm for posterior approximation with a full covariance Gaussian distribution has been demonstrated \cite{ensemblelearning}. %Elaborate?
 
 \end{enumerate}
-\newpage
+\vspace{0.5em}
 We suggest that an investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either variational or Markov Chain Monte Carlo (MCMC) inference. We also suggest looking into using a MCMC approach instead of a variational approach such as KL minimisation. The secondary aim of the project is therefore to see if using MCMC results in better performance:
 \begin{enumerate}
 \setcounter{enumi}{1}
@@ -149,9 +149,7 @@ September 2 & Hand-in date\\
 %\end{labeling}
 
 
- 
 
-\newpage
 \begin{thebibliography}{8}
 
 \bibitem[Barber \& Bishop, 1998]{ensemblelearning} D. Barber, C. M. Bishop, 1998. \textit{Ensemble Learning in Bayesian Neural Networks}. Neural Networks and Machine Learning, Springer, 215-237. \href{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-ensemble-nato-98.pdf}{Link to paper}
