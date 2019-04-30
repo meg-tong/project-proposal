@@ -1,5 +1,5 @@
 \documentclass[a4paper,11=0pt]{article}
-\usepackage[margin=1in, top=1in,bottom=1in]{geometry}
+\usepackage[margin=0.95in, top=1in,bottom=1.1in]{geometry}
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage{graphicx}
@@ -12,13 +12,15 @@
 \usepackage{tikz}
 \usepackage{csquotes}
 \usepackage{hyperref}
+\usepackage{dsfont} % use expectation E
 \renewcommand\rmdefault{ptm} % use Times
 \let\boldtheta\theta % make theta into vector
 \renewcommand{\theta}{\boldsymbol{\boldtheta}} % make theta into vector
 \renewcommand{\d}{\: \mathrm{d}} % fix d in integrals
 \usepackage{scrextend} % for lists
+\newcommand{\x}{\mathbf{x}}
 
-\title{\vspace*{-2em}\textbf{Project Proposal}\\ \vspace{0.25em} \Large Investigating Bayesian Inference in Continual Learning}
+\title{\vspace*{-2em}\textbf{Project Proposal}\\ \vspace{0.25em} \Large Investigating Bayesian Inference in Continual Learning\vspace*{-0.75em}}
 
 \author{M. E. Tong, supervised by S. Farquhar and Y. Gal}
 
@@ -40,56 +42,69 @@ For real-world problems, it is vital that intelligent agents have the capacity t
 
 The major problem in the field is that of catastrophic forgetting. New learning often causes neural networks to rapidly forget old learning \cite{catastrophic}. The challenge is to balance learning new tasks whilst remembering previous ones. Though promising results have been published in the field of continual learning, clear shortcomings have been identified in many of the current approaches and evaluations, such as a dependency on re-training on previous datasets or tasks \cite{robust}. 
 
-The most recent advances in continual learning have favoured a prior-focused approach, such as variational continual learning \cite{vcl}, synaptic intelligence \cite{si}, elastic weight consolidation \cite{ewc}, Riemannian walk \cite{rw} and Kronecker factored online Laplace approximation \cite{ritter}. These prior-focused approaches use the posterior or other parameters from previous tasks as priors for new tasks. Likelihood-based approaches, such as Deep Generative Replay \cite{dgr}, are based on pseudo-rehearsal \cite{robins}, simulating previous datasets in order to estimate their log-likelihood according to the new model. There have also been approaches based on dynamic architectures. %Rusu 2016, Li and Hoiem 2017
+The most recent advances in continual learning have favoured a prior-focused approach, such as variational continual learning \cite{vcl}, elastic weight consolidation \cite{ewc}, synaptic intelligence \cite{si}, Riemannian walk \cite{rw} and Kronecker factored online Laplace approximation \cite{ritter}. These prior-focused approaches use the posterior or other parameters from previous tasks as priors for new tasks. Likelihood-based approaches, such as Deep Generative Replay \cite{dgr}, are based on pseudo-rehearsal \cite{robins}, simulating previous datasets in order to estimate their log-likelihood according to the new model. There have also been approaches based on dynamic architectures. %Rusu 2016, Li and Hoiem 2017
 
 %This section seems basically good. In general, a useful way to frame an introduction is to simply state the context, the problem, your solution, and your specific contributions. Here, of course, your prompt is a bit different. For the final report, let's work on getting this language more succinct and less flowery. For now it's probably fine.
 
-\vspace{-1em}
+\vspace{-1.25em}
 \subsubsection*{Variational Continual Learning}
 
 \vspace{-1em}
-We suggest that further investigation into the variational continual learning (VCL) approach \cite{vcl} is warranted. Currently, good performance is dependent on re-training on small coresets retained from previous datasets \cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning. % Aesthetic reasons aside - why is this useful?
+Further investigation into the variational continual learning (VCL) approach \cite{vcl} is warranted. At the moment, VCL's good performance is dependent on re-training on small coresets retained from previous datasets \\\cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning. % Aesthetic reasons aside - why is this useful?
 
-VCL demonstrates a prior-focused Bayesian approach to continual learning, where the posterior for the previous tasks is used as the prior when training on the new task dataset. This is an intuitive way of allowing the previous tasks to strongly influence prediction, whilst allowing the parameters to adapt to the new task. %Is it intuitive? Or is it just correct? If we were unconstrained by compute - the Bayesian approach would be optimal (given selection of appropriate prior). 
+VCL demonstrates a prior-focused Bayesian approach to continual learning, where the posterior for the previous tasks is used as the prior when training on the new task dataset. This is a correct and intuitive way of allowing the previous tasks to strongly influence prediction, whilst allowing the parameters to adapt to the new task.%Is it intuitive? Or is it just correct? If we were unconstrained by compute - the Bayesian approach would be optimal (given selection of appropriate prior). 
+
+\vspace{-2em}
 \begin{equation}\label{eq:1}
 \begin{split}
 \underbrace{p(\theta | \mathcal{D}_{1:t})}_{\mathclap{\text{new posterior}}} \propto \underbrace{p(\theta | \mathcal{D}_{1:t-1})}_{\substack{\text{previous posterior}\\ (\text{new prior})}} \underbrace{p(\mathcal{D}_t | \theta)}_{\text{likelihood}}
 \end{split}
 \end{equation}
 
-\vspace{-0.75em}
-However, the true posterior $p(\theta | \mathcal{D}_{1:t})$ is computationally intractable, so we must approximate it. We suggest that improvements to this approximation may be key to performance. % More - we know the full Bayesian inference is optimal. But this isn't working. So which approximation is the one that breaks it?
+\vspace{-0.9em}
+However, the true posterior $p(\theta | \mathcal{D}_{1:t})$ is computationally intractable, so we must approximate it. Improvements to this approximation must be key to performance, since this approach is optimal with exact Bayesian inference. % More - we know the full Bayesian inference is optimal. But this isn't working. So which approximation is the one that breaks it?
 
-% I think normally we'd frame this as being peformed using mean-field variational inference. MFVI minimizes the evidence lower bound (ELBO) loss. That ELBO loss is expressed using a KL divergence between the posterior and variational distribution.
-The posterior approximation in VCL is performed using Kullback-Leibler (KL) minimisation, a variational method, over a model family of possible posteriors $\mathcal{Q}$, to yield a tractable normalised approximation $q_t(\theta)$ to the true posterior $p(\theta | \mathcal{D}_{1:t})$. We define $q_0(\theta)$ to be the prior, $p(\theta)$.
+% I think normally we'd frame this as being performed using mean-field variational inference. MFVI minimizes the evidence lower bound (ELBO) loss. That ELBO loss is expressed using a KL divergence between the posterior and variational distribution.
+The posterior approximation in VCL employs mean-field variational inference (VI). Variational inference aims to minimise the Kullback-Leibler (KL) divergence over a model family of possible posteriors $\mathcal{Q}$ in order to yield a tractable normalised approximation $q_t(\theta)$ to the true posterior $p(\theta | \mathcal{D}_{1:t})$. We define $q_0(\theta)$ to be the prior, $p(\theta)$.
 
-\vspace{-1.7em}
+\vspace{-2.1em}
 \begin{equation}\label{eq:3}
 \begin{split}
-\underbrace{p(\theta | \mathcal{D}_{1:t})}_{\mathclap{\substack{\text{new true}\\ \text{posterior}}}}\approx \underbrace{q_t(\theta)}_{\mathclap{\substack{\text{new posterior}\\ \text{approximation}}}} &=\underset{q\in\mathcal{Q}}{\mathrm{arg}\mathrm{min}} \: \mathrm{KL}\bigg(q(\theta)\:||\:\frac{1}{Z_t}\underbrace{q_{t-1}(\theta)}_{\mathclap{\substack{\text{previous posterior} \\ \text{approximation}}}}p(\mathcal{D}_t|\theta) \bigg)\\
+\underbrace{p(\theta | \mathcal{D}_{1:t})}_{\mathclap{\substack{\text{new true}\\ \text{posterior}}}}\approx \underbrace{q_t(\theta)}_{\mathclap{\substack{\text{new posterior}\\ \text{approximation}}}} &=\underset{q\in\mathcal{Q}}{\mathrm{arg}\mathrm{min}} \: \mathrm{KL}\Big(q(\theta)\:||\:\frac{1}{Z_t}\underbrace{q_{t-1}(\theta)}_{\mathclap{\substack{\text{previous posterior} \\ \text{approximation}}}}\overbrace{p(\mathcal{D}_t|\theta)}^{\mathclap{\text{likelihood}}} \Big)\\
 \end{split}
 \end{equation}
-Here, $\theta$ are the parameters, $\mathcal{D}_i$ is the $i$\textsuperscript{th} dataset, $q_i(\theta)$ is the posterior approximation following the $i$\textsuperscript{th} dataset, $Z_t$ is the intractable normalisation constant which is irrelevant for minimisation.
 
+\vspace{-0.6em}
+In VI, this minimisation is typically done via a maximisation of the evidence lower bound (ELBO). 
+
+\vspace{-1.95em}
+\begin{equation}\label{eq:4}
+\begin{split}
+\mathrm{ELBO}= \underbrace{{\textstyle\sum}_{n=1}^{N_t} \> \mathds{E}_{\theta \sim q_t(\theta)}\big[\log p(y_t^{(n)} \:| \:\theta, \x_t^{(n)})\big]}_{\text{expected log-likelihood}} - \mathrm{KL}\big(q_t(\theta)\:||\:q_{t-1}(\theta)\big)
+\end{split}
+\end{equation} %{\textstyle\sum}
+%Here, $\theta$ are the parameters, $\mathcal{D}_i$ is the $i$\textsuperscript{th} dataset, $q_i(\theta)$ is the posterior approximation following the $i$\textsuperscript{th} dataset, $Z_t$ is the intractable normalisation constant which is irrelevant for minimisation.
+
+\vspace{-0.55em}
 Crucially, this is exact Bayesian inference, \ $q_t(\theta)=p(\theta | \mathcal{D}_{1:t}) \: \forall t$, if two criteria are met at every step:
 
 \begin{enumerate}
 \item The true posterior is a member of the model family $\mathcal{Q}$.
-\item The optimisation achieves the minimum KL divergence.
+\item The optimisation achieves the maximum ELBO.
 % Optimisation is a big problem, as we aren't sure that we find the minimum
 % We make a big assumption that we are actually getting a minimum KL divergence
 
 %I'd emphasise that in MFVI we only optimize a bound on this KL divergence.
 \end{enumerate}
 
-Since the posterior approximation occurs after every task is learned, improving this approximation is important to prevent error propagation across different tasks. We therefore suggest that investigation into improvements to these two criteria should be the primary and secondary aims of the project.
+Since the posterior approximation occurs after every task is learned, improving this approximation is important to prevent error propagation across different tasks. We therefore suggest that investigation into improvements to these two criteria should be the aims of the project.
 
 \vspace{-1em}
 \subsubsection*{Aims of the project}
 
 \vspace{-1em}
 %You often say "we suggest" or "we suspect". This makes sense if we aren't confident about things. But hopefully we can remove this sort of language mostly, and replace it with clear statements of what we do know. In this case, we know that the full-covariance version has been implemented in the past (outside a CL setting) and that we can test this easily using existing code. MCMC will just be a bit more complex to implement and doesn't match the baselines as well.
-We suggest that an investigation into an improvement to the first criterion is the most promising, as we suspect that it is likely that the model family used in VCL is not sufficient to approximate the posterior well. The primary aim of the project is therefore to see if using a more adaptable model family results in better performance:
+An investigation into an improvement to the first criterion is the most promising, as it is likely that the model family used in VCL is not sufficient to approximate the posterior well. The primary aim of the project is therefore to see if using a more adaptable model family results in better performance:
 % So we're pretty confident it doesn't lie in this model family
 % Relaxation
 
@@ -106,21 +121,22 @@ We expect that a full covariance Gaussian distribution will be able to approxima
  \label{figure:family}
 \end{center}
 {Figure 1: Comparison of posterior distribution approximations on a synthetic example with two parameters. A full covariance Gaussian distribution (KL) results in a much improved approximation to the posterior than the diagonal covariance Gaussian distribution (KLD), with a lower residual KL value and better KL fit. `More flexible distributions \textelp{} simply give better approximations to the true posterior'.
-\cite{ensemblelearning}}
-%A diagonal covariance Gaussian distribution (KLD) results in KL\textsubscript{res} = 4.6, whereas a full covariance Gaussian distribution (KL) results in an improved KL\textsubscript{res} = 3.9. \cite{ensemblelearning}}.
+\cite{bishopbarber}}
+%A diagonal covariance Gaussian distribution (KLD) results in KL\textsubscript{res} = 4.6, whereas a full covariance Gaussian distribution (KL) results in an improved KL\textsubscript{res} = 3.9. \cite{bishopbarber}}.
 
-A tractable algorithm for posterior approximation with a full covariance Gaussian distribution has been demonstrated \cite{ensemblelearning}. %Elaborate?
+A tractable algorithm for posterior approximation with a full covariance Gaussian distribution has been demonstrated \cite{bishopbarber}. %Elaborate?
 
 \end{enumerate}
 \vspace{0.5em}
-We suggest that an investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either variational or Markov Chain Monte Carlo (MCMC) inference. We also suggest looking into using a MCMC approach instead of a variational approach such as KL minimisation. The secondary aim of the project is therefore to see if using MCMC results in better performance:
+An investigation into an improvement to the second criterion may also be promising. Approximate Bayesian inference is typically carried out with either VI or Markov Chain Monte Carlo (MCMC). The secondary aim of the project is therefore to see if using MCMC results in better performance:
 \begin{enumerate}
 \setcounter{enumi}{1}
 \item \textbf{Using a Markov Chain Monte Carlo method for posterior approximation.}
 
-Using a Monte Carlo method to sample from the posterior distribution is the closest we can get to exact Bayesian inference in practice, and is advantageous in that it does not impose assumptions about the shape of the posterior distribution \cite{hinton}.
+Using a Monte Carlo method to sample from the posterior distribution gets close to exact Bayesian inference in practice, and is advantageous in that it does not impose as many assumptions about the shape of the posterior distribution \cite{hinton}.
 % Not quite - interestingly. There was a recent paper by Titsias that uses Gaussian PRocesses for CL that would be worth reading.
-We expect that Hamiltonian Monte Carlo (HMC) is a promising MCMC method to use for approximate inference. HMC is a principled Hamiltonian dynamics-based MCMC method which has been applied successfully to Bayesian neural networks \cite{bayesianlearning}. It systematically and coherently traverses the state space, avoiding the slow exploration typical of random walk proposals \cite{hmc}. This is particularly useful in high-dimensional spaces, where we must use information about the space geometry for an efficient exploration. Gradient-based algorithms such as HMC tend to be more robust and geometrically ergodic over a larger class of target distributions than non-gradient based algorithms, yielding `stronger guarantees on the validity of the resulting estimators' \cite{conceptual}.
+
+We expect that Hamiltonian Monte Carlo (HMC) is a promising MCMC method to use for approximate inference. HMC is a principled Hamiltonian dynamics-based MCMC method which has been applied successfully to Bayesian neural networks \cite{neal1995}. It systematically and coherently traverses the state space, avoiding the slow exploration typical of random walk proposals \cite{neal2012}. This is particularly useful in high-dimensional spaces, where we must use information about the space geometry for an efficient exploration. Gradient-based algorithms such as HMC tend to be more robust and geometrically ergodic over a larger class of target distributions than non-gradient based algorithms, yielding `stronger guarantees on the validity of the resulting estimators' \cite{betancourt}.
 % second-gradient - calculating Hamiltonian is really expensive for high dimensional spaces
 % HMC sets cap on size of neural network we can use
 \end{enumerate}
@@ -130,14 +146,12 @@ We expect that Hamiltonian Monte Carlo (HMC) is a promising MCMC method to use f
 
 \begin{tabular}{l|l}
 \hline
-March 	& Write project proposal; review literature\\
-April	& Use non-continual BNN to compare diagonal and full model families\\ % Have we already missed this?
-May		& Continue with comparison; \\ % You may also need more literature review time. Especially important to be familiar with Barber and Bishop.
-&begin continual learning comparison implementation \\
-June 	& Continue with continual learning comparison implementation\\
-July	& Continue with continual learning comparison implementation; \\
-&begin with Markov Chain Monte Carlo implementation\\
-August	& Continue with MCMC implementation\\% I would set aside some time for understanding the results and interpreting/writing up
+March 	& Review literature\\
+April	& Review literature; write project proposal\\
+May		& Review literature; use non-continual BNN to compare diagonal and full model families\\ % You may also need more literature review time. Especially important to be familiar with Barber and Bishop.
+June 	& Begin continual learning comparison implementation\\
+July	& Continue with continual learning comparison and begin MCMC implementation \\
+August	& Continue with MCMC implementation; finish writing up results\\% I would set aside some time for understanding the results and interpreting/writing up
 September 2 & Hand-in date\\
 \hline
 \end{tabular}
@@ -155,9 +169,9 @@ September 2 & Hand-in date\\
 
 \begin{thebibliography}{8}
 
-\bibitem[Barber \& Bishop, 1998]{ensemblelearning} D. Barber, C. M. Bishop, 1998. \textit{Ensemble Learning in Bayesian Neural Networks}. Neural Networks and Machine Learning, Springer, 215-237. \href{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-ensemble-nato-98.pdf}{Link to paper}
+\bibitem[Barber \& Bishop, 1998]{bishopbarber} D. Barber, C. M. Bishop, 1998. \textit{Ensemble Learning in Bayesian Neural Networks}. Neural Networks and Machine Learning, Springer, 215-237. \href{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-ensemble-nato-98.pdf}{Link to paper}
 
-\bibitem[Betancourt, 2017]{conceptual} M. Betancourt, 2017. \textit{A Conceptual Introduction to Hamiltonian Monte Carlo}. \href{https://arxiv.org/abs/1701.02434}{arXiv:1701.02434v2}
+\bibitem[Betancourt, 2017]{betancourt} M. Betancourt, 2017. \textit{A Conceptual Introduction to Hamiltonian Monte Carlo}. \href{https://arxiv.org/abs/1701.02434}{arXiv:1701.02434v2}
 
 \bibitem[Chaudhry et al., 2018]{rw} A. Chaudhry, P. K. Dokania, T. Ajanthan, P. H. S. Torr, 2018. \textit{Riemannian Walk for Incremental Learning: Understanding Forgetting and Intransigence}. \href{https://arxiv.org/abs/1801.10112}{arXiv:1801.10112v3}
 
@@ -176,9 +190,9 @@ Neural Networks Simple by Minimizing Description Length of the Weights}. \href{h
 
 \bibitem[McCloskey \& Cohen, 1989]{catastrophic} M. McCloskey, N. J. Cohen, 1989. \textit{Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem}. Psychology of Learning and Motivation, Volume 24, 109-165.
 
-\bibitem[Neal, 2012]{hmc} R. M. Neal, 2012. \textit{MCMC using Hamiltonian dynamics}. \href{https://arxiv.org/abs/1206.1901}{arXiv:1206.1901v1}
+\bibitem[Neal, 2012]{neal2012} R. M. Neal, 2012. \textit{MCMC using Hamiltonian dynamics}. \href{https://arxiv.org/abs/1206.1901}{arXiv:1206.1901v1}
 
-\bibitem[Neal, 1995]{bayesianlearning} R. M. Neal, 1995. \textit{Bayesian Learning for Neural Networks}. \href{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.446.9306&rep=rep1&type=pdf}{Link to paper}
+\bibitem[Neal, 1995]{neal1995} R. M. Neal, 1995. \textit{Bayesian Learning for Neural Networks}. \href{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.446.9306&rep=rep1&type=pdf}{Link to paper}
 
 \bibitem[Nguyen et al., 2017]{vcl} C. V. Nguyen, Y. Li, T. D. Bui, R. E. Turner, 2017. \textit{Variational Continual Learning}. \href{https://arxiv.org/abs/1710.10628}{arXiv:1710.10628v3}
 
