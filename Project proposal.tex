@@ -1,4 +1,4 @@
-\documentclass[a4paper,11=0pt]{article}
+\documentclass[a4paper,10pt]{article}
 \usepackage[margin=0.95in, top=1in,bottom=1.1in]{geometry}
 \usepackage{amsmath}
 \usepackage{gensymb}
@@ -20,7 +20,7 @@
 \usepackage{scrextend} % for lists
 \newcommand{\x}{\mathbf{x}}
 
-\title{\vspace*{-2em}\textbf{Project Proposal}\\ \vspace{0.25em} \Large Investigating Bayesian Inference in Continual Learning\vspace*{-0.75em}}
+\title{\vspace*{-2.25em}\textbf{Project Proposal}\\ \vspace{0.25em} \Large Investigating Bayesian Inference in Continual Learning\vspace*{-0.75em}}
 
 \author{M. E. Tong, supervised by S. Farquhar and Y. Gal}
 
@@ -38,7 +38,8 @@
 %Signature of Project Supervisor.
 
 \vspace{-1em}
-For real-world problems, it is vital that intelligent agents have the capacity to learn and remember a variety of tasks \cite{ewc}. Continual learning refers to online multi-task learning where tasks are learned sequentially, with datasets discarded after training. It is of particular importance for applications for which retaining old datasets is unethical, undesireable, illegal or imprudent \cite{unifying, robust}. %Maybe give some concrete examples where this might be useful? E.g., private data that must be deleted every 6m, or adapting a robot to work on multiple terrains after deployment.
+For real-world problems, it is vital that intelligent agents have the capacity to learn and remember a variety of tasks \cite{ewc}. Continual learning refers to online multi-task learning where tasks are learned sequentially, with datasets discarded after training. It is of particular importance for applications for which retaining old datasets is unethical, undesireable, illegal or imprudent \cite{unifying, robust}. %, such as... 
+%Maybe give some concrete examples where this might be useful? E.g., private data that must be deleted every 6m, or adapting a robot to work on multiple terrains after deployment.
 
 The major problem in the field is that of catastrophic forgetting. New learning often causes neural networks to rapidly forget old learning \cite{catastrophic}. The challenge is to balance learning new tasks whilst remembering previous ones. Though promising results have been published in the field of continual learning, clear shortcomings have been identified in many of the current approaches and evaluations, such as a dependency on re-training on previous datasets or tasks \cite{robust}. 
 
@@ -50,24 +51,24 @@ The most recent advances in continual learning have favoured a prior-focused app
 \subsubsection*{Variational Continual Learning}
 
 \vspace{-1em}
-Further investigation into the variational continual learning (VCL) approach \cite{vcl} is warranted. At the moment, VCL's good performance is dependent on re-training on small coresets retained from previous datasets \\\cite{robust}, but improvements to the approach may eliminate the need for these coresets, which would better reflect true continual learning. % Aesthetic reasons aside - why is this useful?
+Further investigation into the variational continual learning (VCL) approach \cite{vcl} is warranted. At the moment, VCL's good performance is dependent on re-training on small coresets retained from previous datasets \\\cite{robust}, but improvements to the approach may eliminate the need for these coresets, which cannot be assumed to be available for all continual learning applications. %which would better reflect true continual learning. %Coresets cannot always be used, not available for many applications % Aesthetic reasons aside - why is this useful? 
 
 VCL demonstrates a prior-focused Bayesian approach to continual learning, where the posterior for the previous tasks is used as the prior when training on the new task dataset. This is a correct and intuitive way of allowing the previous tasks to strongly influence prediction, whilst allowing the parameters to adapt to the new task.%Is it intuitive? Or is it just correct? If we were unconstrained by compute - the Bayesian approach would be optimal (given selection of appropriate prior). 
 
-\vspace{-2em}
+\vspace{-1.95em}
 \begin{equation}\label{eq:1}
 \begin{split}
 \underbrace{p(\theta | \mathcal{D}_{1:t})}_{\mathclap{\text{new posterior}}} \propto \underbrace{p(\theta | \mathcal{D}_{1:t-1})}_{\substack{\text{previous posterior}\\ (\text{new prior})}} \underbrace{p(\mathcal{D}_t | \theta)}_{\text{likelihood}}
 \end{split}
 \end{equation}
 
-\vspace{-0.9em}
+\vspace{-0.95em}
 However, the true posterior $p(\theta | \mathcal{D}_{1:t})$ is computationally intractable, so we must approximate it. Improvements to this approximation must be key to performance, since this approach is optimal with exact Bayesian inference. % More - we know the full Bayesian inference is optimal. But this isn't working. So which approximation is the one that breaks it?
 
 % I think normally we'd frame this as being performed using mean-field variational inference. MFVI minimizes the evidence lower bound (ELBO) loss. That ELBO loss is expressed using a KL divergence between the posterior and variational distribution.
 The posterior approximation in VCL employs mean-field variational inference (VI). Variational inference aims to minimise the Kullback-Leibler (KL) divergence over a model family of possible posteriors $\mathcal{Q}$ in order to yield a tractable normalised approximation $q_t(\theta)$ to the true posterior $p(\theta | \mathcal{D}_{1:t})$. We define $q_0(\theta)$ to be the prior, $p(\theta)$.
 
-\vspace{-2.1em}
+\vspace{-2.em}
 \begin{equation}\label{eq:3}
 \begin{split}
 \underbrace{p(\theta | \mathcal{D}_{1:t})}_{\mathclap{\substack{\text{new true}\\ \text{posterior}}}}\approx \underbrace{q_t(\theta)}_{\mathclap{\substack{\text{new posterior}\\ \text{approximation}}}} &=\underset{q\in\mathcal{Q}}{\mathrm{arg}\mathrm{min}} \: \mathrm{KL}\Big(q(\theta)\:||\:\frac{1}{Z_t}\underbrace{q_{t-1}(\theta)}_{\mathclap{\substack{\text{previous posterior} \\ \text{approximation}}}}\overbrace{p(\mathcal{D}_t|\theta)}^{\mathclap{\text{likelihood}}} \Big)\\
@@ -80,13 +81,13 @@ In VI, this minimisation is typically done via a maximisation of the evidence lo
 \vspace{-1.95em}
 \begin{equation}\label{eq:4}
 \begin{split}
-\mathrm{ELBO}= \underbrace{{\textstyle\sum}_{n=1}^{N_t} \> \mathds{E}_{\theta \sim q_t(\theta)}\big[\log p(y_t^{(n)} \:| \:\theta, \x_t^{(n)})\big]}_{\text{expected log-likelihood}} - \mathrm{KL}\big(q_t(\theta)\:||\:q_{t-1}(\theta)\big)
+\mathrm{ELBO}= \underbrace{{\textstyle\sum}_{n=1}^{N_t} \> \mathds{E}_{\theta \sim q_t(\theta)}\big[\log p(y_t^{(n)} \:| \:\theta, \x_t^{(n)})\big]}_{\text{expected log-likelihood}} \> -  \> \mathrm{KL}\big(q_t(\theta)\:||\:q_{t-1}(\theta)\big)
 \end{split}
 \end{equation} %{\textstyle\sum}
 %Here, $\theta$ are the parameters, $\mathcal{D}_i$ is the $i$\textsuperscript{th} dataset, $q_i(\theta)$ is the posterior approximation following the $i$\textsuperscript{th} dataset, $Z_t$ is the intractable normalisation constant which is irrelevant for minimisation.
 
-\vspace{-0.55em}
-Crucially, this is exact Bayesian inference, \ $q_t(\theta)=p(\theta | \mathcal{D}_{1:t}) \: \forall t$, if two criteria are met at every step:
+\vspace{-0.6em}
+Crucially, this is exact Bayesian inference, $q_t(\theta)=p(\theta | \mathcal{D}_{1:t}) \>\, \forall t$, if two criteria are met at every step:
 
 \begin{enumerate}
 \item The true posterior is a member of the model family $\mathcal{Q}$.
@@ -134,7 +135,7 @@ An investigation into an improvement to the second criterion may also be promisi
 \item \textbf{Using a Markov Chain Monte Carlo method for posterior approximation.}
 
 Using a Monte Carlo method to sample from the posterior distribution gets close to exact Bayesian inference in practice, and is advantageous in that it does not impose as many assumptions about the shape of the posterior distribution \cite{hinton}.
-% Not quite - interestingly. There was a recent paper by Titsias that uses Gaussian PRocesses for CL that would be worth reading.
+% Not quite - interestingly. There was a recent paper by Titsias that uses Gaussian Processes for CL that would be worth reading.
 
 We expect that Hamiltonian Monte Carlo (HMC) is a promising MCMC method to use for approximate inference. HMC is a principled Hamiltonian dynamics-based MCMC method which has been applied successfully to Bayesian neural networks \cite{neal1995}. It systematically and coherently traverses the state space, avoiding the slow exploration typical of random walk proposals \cite{neal2012}. This is particularly useful in high-dimensional spaces, where we must use information about the space geometry for an efficient exploration. Gradient-based algorithms such as HMC tend to be more robust and geometrically ergodic over a larger class of target distributions than non-gradient based algorithms, yielding `stronger guarantees on the validity of the resulting estimators' \cite{betancourt}.
 % second-gradient - calculating Hamiltonian is really expensive for high dimensional spaces
