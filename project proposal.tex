@@ -76,7 +76,7 @@ The posterior approximation in VCL employs mean-field variational inference (VI)
 \end{equation}
 
 \vspace{-0.6em}
-In VI, this minimisation is typically done via a maximisation of the evidence lower bound (ELBO). 
+In VI, this minimisation is typically done via a maximisation of the variational evidence lower bound (ELBO). 
 
 \vspace{-1.9em}
 \begin{equation}\label{eq:4}
@@ -92,7 +92,7 @@ Crucially, this is exact Bayesian inference, $q_t(\theta)=p(\theta | \mathcal{D}
 \begin{enumerate}
 \item The true posterior is a member of the model family $\mathcal{Q}$.
 \vspace{-0.2em}
-\item The optimisation achieves the maximum ELBO.
+\item The optimisation achieves the maximum model evidence.
 % Optimisation is a big problem, as we aren't sure that we find the minimum
 % We make a big assumption that we are actually getting a minimum KL divergence
 
