@@ -114,8 +114,12 @@ An investigation into an improvement to the first criterion is the most promisin
 \item \textbf{Using full covariance Gaussian distributions for the model family $\mathcal{Q}$.}
 
 VCL uses a Gaussian mean-field approximate posterior, with diagonal covariance: %sigma^2_{t,d}
+
+\vspace{-1.25em}
 \[q_t(\theta) = \prod^D_{d=1} \mathcal{N}(\boldtheta_{t,d}; \mu_{t,d}, \sigma^2_{t,d})\]
 % correlation elements, non-diagonal elements
+
+\vspace{-0.75em}
 We expect that a full covariance Gaussian distribution will be able to approximate the posterior more accurately by including off-diagonal correlation elements in the covariance matrix, which can be significant. Simple diagonal covariance Gaussian distributions approximate the posterior too conservatively, placing no probability mass where the posterior is small \cite{mackay1995}. The minimum KL fit obtained with the full covariance model family should therefore be better than that obtained with the diagonal covariance model family. %MacKay 1992 thinks off-diagonal elements are significant.
 
 \begin{center}
